@@ -3,9 +3,12 @@
 FROM gradle:8.10.2-jdk17 AS build
 WORKDIR /app
 
+# Copier uniquement les fichiers de config en premier pour cacher les dépendances
 COPY build.gradle settings.gradle ./
-COPY src ./src
+RUN gradle dependencies --no-daemon || true
 
+# Copier les sources et builder le JAR
+COPY src ./src
 RUN gradle clean bootJar --no-daemon
 
 FROM eclipse-temurin:17-jre-alpine
