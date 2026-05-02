@@ -1,0 +1,202 @@
+{
+  "info": {
+    "_postman_id": "c6b2a8a1-7d54-478e-b2a4-b2f03f7912be",
+    "name": "Dash Backend API",
+    "description": "Collection Postman pour tester tous les endpoints du backend Dash.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health - GET /api/v1/health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "health"
+          ]
+        },
+        "description": "Vérifie que le backend est UP"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var jsonData = pm.response.json();",
+              "pm.test(\"Health status is UP\", function () {",
+              "    pm.expect(jsonData.status).to.eql(\"UP\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sync - POST /api/v1/sync/keystrokes",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"childExternalId\": \"{{childExternalId}}\",\n  \"payload\": \"typed text sample\",\n  \"capturedAt\": \"{{$isoTimestamp}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sync/keystrokes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sync",
+            "keystrokes"
+          ]
+        },
+        "description": "Synchronise des frappes clavier"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var jsonData = pm.response.json();",
+              "pm.test(\"Sync response status is ok\", function () {",
+              "    pm.expect(jsonData.status).to.eql(\"ok\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sync - POST /api/v1/sync/app-usage",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"childExternalId\": \"{{childExternalId}}\",\n  \"payload\": \"com.instagram.android:opened\",\n  \"capturedAt\": \"{{$isoTimestamp}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sync/app-usage",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sync",
+            "app-usage"
+          ]
+        },
+        "description": "Synchronise l'activite applicative"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var jsonData = pm.response.json();",
+              "pm.test(\"Sync response status is ok\", function () {",
+              "    pm.expect(jsonData.status).to.eql(\"ok\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sync - POST /api/v1/sync/locations",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"childExternalId\": \"{{childExternalId}}\",\n  \"latitude\": 33.5731,\n  \"longitude\": -7.5898,\n  \"capturedAt\": \"{{$isoTimestamp}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/sync/locations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sync",
+            "locations"
+          ]
+        },
+        "description": "Synchronise les donnees de localisation"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var jsonData = pm.response.json();",
+              "pm.test(\"Sync response status is ok\", function () {",
+              "    pm.expect(jsonData.status).to.eql(\"ok\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "childExternalId",
+      "value": "device-001"
+    }
+  ]
+}
