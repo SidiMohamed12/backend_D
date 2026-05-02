@@ -21,22 +21,25 @@ public class SyncService {
     private final KeystrokeDataRepository keystrokeDataRepository;
     private final AppUsageDataRepository appUsageDataRepository;
     private final LocationDataRepository locationDataRepository;
+    private final UserDataFolderService userDataFolderService;
 
     public SyncService(
         ChildDeviceRepository childDeviceRepository,
         KeystrokeDataRepository keystrokeDataRepository,
         AppUsageDataRepository appUsageDataRepository,
-        LocationDataRepository locationDataRepository
+        LocationDataRepository locationDataRepository,
+        UserDataFolderService userDataFolderService
     ) {
         this.childDeviceRepository = childDeviceRepository;
         this.keystrokeDataRepository = keystrokeDataRepository;
         this.appUsageDataRepository = appUsageDataRepository;
         this.locationDataRepository = locationDataRepository;
+        this.userDataFolderService = userDataFolderService;
     }
 
     @Transactional
     public void saveKeystroke(KeystrokeSyncRequest request) {
-        ChildDevice childDevice = getOrCreateChild(request.childExternalId());
+        ChildDevice childDevice = getOrCreateChild(request.childExternalId(), request.deviceId(), request.deviceName());
         KeystrokeData data = new KeystrokeData();
         data.setChildDevice(childDevice);
         data.setPayload(request.payload());
@@ -46,7 +49,7 @@ public class SyncService {
 
     @Transactional
     public void saveAppUsage(AppUsageSyncRequest request) {
-        ChildDevice childDevice = getOrCreateChild(request.childExternalId());
+        ChildDevice childDevice = getOrCreateChild(request.childExternalId(), request.deviceId(), request.deviceName());
         AppUsageData data = new AppUsageData();
         data.setChildDevice(childDevice);
         data.setPayload(request.payload());
@@ -56,7 +59,7 @@ public class SyncService {
 
     @Transactional
     public void saveLocation(LocationSyncRequest request) {
-        ChildDevice childDevice = getOrCreateChild(request.childExternalId());
+        ChildDevice childDevice = getOrCreateChild(request.childExternalId(), request.deviceId(), request.deviceName());
         LocationData data = new LocationData();
         data.setChildDevice(childDevice);
         data.setLatitude(request.latitude());
@@ -65,13 +68,18 @@ public class SyncService {
         locationDataRepository.save(data);
     }
 
-    private ChildDevice getOrCreateChild(String externalId) {
-        return childDeviceRepository.findByExternalId(externalId)
+    private ChildDevice getOrCreateChild(String externalId, String deviceId, String deviceName) {
+        ChildDevice childDevice = childDeviceRepository.findByExternalId(externalId)
             .orElseGet(() -> {
-                ChildDevice childDevice = new ChildDevice();
-                childDevice.setExternalId(externalId);
-                childDevice.setLabel("child-" + externalId);
-                return childDeviceRepository.save(childDevice);
+                ChildDevice cd = new ChildDevice();
+                cd.setExternalId(externalId);
+                cd.setLabel("child-" + externalId);
+                cd.setDeviceId(deviceId);
+                cd.setDeviceName(deviceName);
+                return childDeviceRepository.save(cd);
             });
+
+        userDataFolderService.ensureUserFolders(deviceId, deviceName);
+        return childDevice;
     }
 }

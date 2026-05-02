@@ -6,6 +6,8 @@ import java.time.OffsetDateTime;
 
 public record AppUsageSyncRequest(
     @NotBlank String childExternalId,
+    @NotBlank String deviceId,
+    @NotBlank String deviceName,
     @NotBlank String payload,
     @NotNull OffsetDateTime capturedAt
 ) {

@@ -25,8 +25,12 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-dash_user}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-dash_password}
       SERVER_PORT: 8085
+      STORAGE_BASE_DIR: /app/data/users
     ports:
       - "8085:8085"
+    volumes:
+      - backend_data:/app/data
 
 volumes:
   postgres_data:
+  backend_data:

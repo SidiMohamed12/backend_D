@@ -22,6 +22,12 @@ public class ChildDevice {
     @Column(name = "label", nullable = false, length = 120)
     private String label;
 
+    @Column(name = "device_id", nullable = false, length = 200)
+    private String deviceId = "";
+
+    @Column(name = "device_name", nullable = false, length = 200)
+    private String deviceName = "";
+
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now();
 
@@ -47,5 +53,21 @@ public class ChildDevice {
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 }

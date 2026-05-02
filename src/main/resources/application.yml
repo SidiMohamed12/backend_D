@@ -28,3 +28,6 @@ management:
     web:
       exposure:
         include: health,info
+
+storage:
+  base-dir: ${STORAGE_BASE_DIR:data/users}
